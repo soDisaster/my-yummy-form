@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -26,6 +28,7 @@ import androidx.navigation.NavHostController
 import com.google.gson.Gson
 import com.technicaltest.myyummyform.R
 import com.technicaltest.myyummyform.composable.YummyButton
+import com.technicaltest.myyummyform.data.Choice
 import com.technicaltest.myyummyform.data.YummyForm
 import com.technicaltest.myyummyform.utils.readJSONFromAssets
 
@@ -43,7 +46,6 @@ fun FormScreen(navController: NavHostController) {
         verticalArrangement = Arrangement.Center,
     ) {
         data.forEach { item ->
-
             // Question
             Text(
                 modifier = Modifier.padding(bottom = 2.dp),
@@ -57,8 +59,28 @@ fun FormScreen(navController: NavHostController) {
 
             // Choices
             if (item.multiple) {
-                Text("Checkbox")
+                // Checkboxes
+                val selectedChoices = remember { mutableStateListOf(listOf<Choice>()) }
+
+                Column {
+                    item.choices.sortedBy { it.order }.forEach { response ->
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Checkbox(
+                                checked = selectedChoices.any { it.contains(response) },
+                                onCheckedChange = {
+                                    if (selectedChoices.any { it.contains(response) }) {
+                                        selectedChoices.remove(listOf(response))
+                                    } else {
+                                        selectedChoices.add(listOf(response))
+                                    }
+                                }
+                            )
+                            Text(response.name)
+                        }
+                    }
+                }
             } else {
+                // Radio Buttons
                 var selectedOption by remember { mutableStateOf(item.choices.first()) }
 
                 Column {
@@ -73,6 +95,7 @@ fun FormScreen(navController: NavHostController) {
                 }
             }
         }
+
         // Send form
         YummyButton(text = R.string.form_button) { navController.popBackStack() }
     }
