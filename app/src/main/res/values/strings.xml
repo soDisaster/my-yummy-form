@@ -2,4 +2,6 @@
     <string name="app_name">MyYummyForm</string>
     <string name="home_title">My Yummy form</string>
     <string name="home_subtitle">Welcome in a wonderful world !</string>
+    <string name="home_button">Let\'s go!</string>
+    <string name="form_button">Send form</string>
 </resources>
