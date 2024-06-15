@@ -1,4 +1,4 @@
-package com.technicaltest.myyummyform.screen.form
+package com.technicaltest.myyummyform.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,6 +32,7 @@ import com.technicaltest.myyummyform.data.AnswersToSend
 import com.technicaltest.myyummyform.data.AnswersToSendItem
 import com.technicaltest.myyummyform.data.Choice
 import com.technicaltest.myyummyform.data.YummyForm
+import com.technicaltest.myyummyform.navigation.Success
 import com.technicaltest.myyummyform.utils.readJSONFromAssets
 import com.technicaltest.myyummyform.utils.writeJsonFile
 
@@ -124,7 +125,7 @@ fun FormScreen(navController: NavHostController) {
         // Send form
         YummyButton(text = R.string.form_button) {
             val textToDisplay = writeJsonFile(answersToSend.value)
-            navController.popBackStack()
+            navController.navigate(Success(textToDisplay))
         }
     }
 }

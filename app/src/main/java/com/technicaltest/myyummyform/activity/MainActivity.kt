@@ -1,4 +1,4 @@
-package com.technicaltest.myyummyform
+package com.technicaltest.myyummyform.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -8,15 +8,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.technicaltest.myyummyform.navigation.NavigationItem
+import com.technicaltest.myyummyform.navigation.Form
+import com.technicaltest.myyummyform.navigation.Home
+import com.technicaltest.myyummyform.navigation.Success
+import com.technicaltest.myyummyform.screen.FormScreen
 import com.technicaltest.myyummyform.screen.HomeScreen
-import com.technicaltest.myyummyform.screen.form.FormScreen
+import com.technicaltest.myyummyform.screen.SuccessScreen
 import com.technicaltest.myyummyform.ui.theme.MyYummyFormTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,30 +32,26 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(innerPadding)
                     ) {
-                        AppNavHost(navController = rememberNavController())
+
+                        val navController = rememberNavController()
+
+                        NavHost(
+                            navController = navController,
+                            startDestination = Home,
+                        ) {
+                            composable<Home> {
+                                HomeScreen(navController)
+                            }
+                            composable<Form> {
+                                FormScreen(navController)
+                            }
+                            composable<Success> {
+                                SuccessScreen(navController, "ok")
+                            }
+                        }
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun AppNavHost(
-    modifier: Modifier = Modifier,
-    navController: NavHostController,
-    startDestination: String = NavigationItem.Home.route,
-) {
-    NavHost(
-        modifier = modifier,
-        navController = navController,
-        startDestination = startDestination
-    ) {
-        composable(NavigationItem.Home.route) {
-            HomeScreen(navController)
-        }
-        composable(NavigationItem.Form.route) {
-            FormScreen(navController)
         }
     }
 }

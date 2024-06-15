@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.technicaltest.myyummyform.R
 import com.technicaltest.myyummyform.composable.YummyButton
-import com.technicaltest.myyummyform.navigation.NavigationItem
+import com.technicaltest.myyummyform.navigation.Form
 
 @Composable
 fun HomeScreen(navController: NavHostController) {
@@ -43,7 +43,7 @@ fun HomeScreen(navController: NavHostController) {
             contentDescription = "Beautiful raclette"
         )
         YummyButton(R.string.home_button) {
-            navController.navigate(NavigationItem.Form.route)
+            navController.navigate(Form)
         }
     }
 }

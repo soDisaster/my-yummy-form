@@ -1,8 +1,12 @@
 package com.technicaltest.myyummyform.navigation
 
-import com.technicaltest.myyummyform.data.enum.Screen
+import kotlinx.serialization.Serializable
 
-sealed class NavigationItem(val route: String) {
-    data object Home : NavigationItem(Screen.HOME.name)
-    data object Form : NavigationItem(Screen.FORM.name)
-}
+@Serializable
+internal object Home
+
+@Serializable
+internal object Form
+
+@Serializable
+data class Success(val textFile: String)
