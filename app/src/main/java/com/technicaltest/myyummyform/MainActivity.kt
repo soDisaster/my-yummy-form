@@ -15,8 +15,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.technicaltest.myyummyform.navigation.NavigationItem
-import com.technicaltest.myyummyform.screen.FormScreen
 import com.technicaltest.myyummyform.screen.HomeScreen
+import com.technicaltest.myyummyform.screen.form.FormScreen
 import com.technicaltest.myyummyform.ui.theme.MyYummyFormTheme
 
 class MainActivity : ComponentActivity() {

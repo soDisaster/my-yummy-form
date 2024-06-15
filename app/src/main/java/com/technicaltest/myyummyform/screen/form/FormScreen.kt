@@ -1,4 +1,4 @@
-package com.technicaltest.myyummyform.screen
+package com.technicaltest.myyummyform.screen.form
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,15 +28,21 @@ import androidx.navigation.NavHostController
 import com.google.gson.Gson
 import com.technicaltest.myyummyform.R
 import com.technicaltest.myyummyform.composable.YummyButton
+import com.technicaltest.myyummyform.data.AnswersToSend
+import com.technicaltest.myyummyform.data.AnswersToSendItem
 import com.technicaltest.myyummyform.data.Choice
 import com.technicaltest.myyummyform.data.YummyForm
 import com.technicaltest.myyummyform.utils.readJSONFromAssets
+import com.technicaltest.myyummyform.utils.writeJsonFile
 
 @Composable
 fun FormScreen(navController: NavHostController) {
 
     val json = readJSONFromAssets(LocalContext.current)
     val data = Gson().fromJson(json, YummyForm::class.java).sortedBy { it.order }
+    val context = LocalContext.current
+
+    val answersToSend = remember { mutableStateOf(AnswersToSend()) }
 
     Column(
         modifier = Modifier
@@ -45,7 +51,13 @@ fun FormScreen(navController: NavHostController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
+
         data.forEach { item ->
+
+            var selectedRadioButtonAnswer by remember { mutableStateOf(item.choices.first()) }
+            val selectedCheckboxesAnswers =
+                remember { mutableStateListOf<List<Choice>>(emptyList()) }
+
             // Question
             Text(
                 modifier = Modifier.padding(bottom = 2.dp),
@@ -60,19 +72,24 @@ fun FormScreen(navController: NavHostController) {
             // Choices
             if (item.multiple) {
                 // Checkboxes
-                val selectedChoices = remember { mutableStateListOf(listOf<Choice>()) }
-
                 Column {
                     item.choices.sortedBy { it.order }.forEach { response ->
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Checkbox(
-                                checked = selectedChoices.any { it.contains(response) },
+                                checked = selectedCheckboxesAnswers.any { it.contains(response) },
                                 onCheckedChange = {
-                                    if (selectedChoices.any { it.contains(response) }) {
-                                        selectedChoices.remove(listOf(response))
+                                    if (selectedCheckboxesAnswers.any { it.contains(response) }) {
+                                        selectedCheckboxesAnswers.remove(listOf(response))
                                     } else {
-                                        selectedChoices.add(listOf(response))
+                                        selectedCheckboxesAnswers.add(listOf(response))
                                     }
+                                    answersToSend.value.add(
+                                        AnswersToSendItem(
+                                            id = item.id,
+                                            choices = selectedCheckboxesAnswers.flatten()
+                                                .map { it.id }
+                                        )
+                                    )
                                 }
                             )
                             Text(response.name)
@@ -81,14 +98,22 @@ fun FormScreen(navController: NavHostController) {
                 }
             } else {
                 // Radio Buttons
-                var selectedOption by remember { mutableStateOf(item.choices.first()) }
-
                 Column {
                     item.choices.sortedBy { it.order }.forEach { response ->
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             RadioButton(
-                                selected = selectedOption == response,
-                                onClick = { selectedOption = response })
+                                selected = selectedRadioButtonAnswer == response,
+                                onClick = {
+                                    selectedRadioButtonAnswer = response
+                                    answersToSend.value.add(
+                                        AnswersToSendItem(
+                                            id = item.id,
+                                            choices = listOf(
+                                                selectedRadioButtonAnswer.id
+                                            )
+                                        )
+                                    )
+                                })
                             Text(response.name)
                         }
                     }
@@ -97,6 +122,9 @@ fun FormScreen(navController: NavHostController) {
         }
 
         // Send form
-        YummyButton(text = R.string.form_button) { navController.popBackStack() }
+        YummyButton(text = R.string.form_button) {
+            val textToDisplay = writeJsonFile(answersToSend.value)
+            navController.popBackStack()
+        }
     }
 }
