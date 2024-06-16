@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
 
             val scaffoldState = remember { SnackbarHostState() }
 
-            MyYummyFormTheme {
+            MyYummyFormTheme(darkTheme = false) {
                 Scaffold(
                     topBar = { YummyTopAppBar() },
                     snackbarHost = {

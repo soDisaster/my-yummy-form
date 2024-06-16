@@ -29,6 +29,7 @@ fun SuccessScreen(navController: NavHostController, textFile: String) {
     ) {
 
         Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
             text = stringResource(id = R.string.success_congrats_title),
             style = TextStyle(
                 color = colorResource(id = R.color.purple_700),

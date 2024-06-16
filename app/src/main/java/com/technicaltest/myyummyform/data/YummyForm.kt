@@ -12,7 +12,7 @@ data class YummyFormItem(
 )
 
 data class Choice(
-    val description: String,
+    val description: String?,
     val id: Int,
     val name: String,
     val order: Int
