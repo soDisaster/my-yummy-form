@@ -1,5 +1,6 @@
 package com.technicaltest.myyummyform.screen
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -9,17 +10,21 @@ import com.technicaltest.myyummyform.navigation.Home
 @Composable
 fun SuccessScreen(navController: NavHostController, textFile: String) {
 
-    Text("Congratulations your file was successufully created!")
+    Column {
 
-    Text(textFile)
+        Text("Congratulations your file was successufully created!")
 
-    Text("You can find your answers in your Documents")
+        Text(textFile)
 
-    Button(onClick = {}) {
-        Text("Send by email")
-    }
+        Text("You can find a file with your answers in your Documents")
 
-    Button(onClick = { navController.navigate(Home) }) {
-        Text("Finish")
+        Button(onClick = {}) {
+            Text("Send by email")
+        }
+
+        Button(onClick = { navController.navigate(Home) }) {
+            Text("Finish")
+        }
+
     }
 }

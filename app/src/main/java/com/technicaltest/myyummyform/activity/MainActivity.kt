@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.technicaltest.myyummyform.navigation.Form
 import com.technicaltest.myyummyform.navigation.Home
 import com.technicaltest.myyummyform.navigation.Success
@@ -19,8 +20,12 @@ import com.technicaltest.myyummyform.screen.FormScreen
 import com.technicaltest.myyummyform.screen.HomeScreen
 import com.technicaltest.myyummyform.screen.SuccessScreen
 import com.technicaltest.myyummyform.ui.theme.MyYummyFormTheme
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
+
+    private val viewModel : MainActivityViewModel by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -34,19 +39,20 @@ class MainActivity : ComponentActivity() {
                     ) {
 
                         val navController = rememberNavController()
-
                         NavHost(
                             navController = navController,
-                            startDestination = Home,
+                            startDestination = Home
                         ) {
                             composable<Home> {
                                 HomeScreen(navController)
                             }
                             composable<Form> {
-                                FormScreen(navController)
+                                FormScreen(navController, viewModel)
                             }
                             composable<Success> {
-                                SuccessScreen(navController, "ok")
+                                val details =
+                                    it.toRoute<Success>()
+                                SuccessScreen(navController, details.textFile)
                             }
                         }
                     }

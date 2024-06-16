@@ -4,12 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -19,31 +15,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.google.gson.Gson
 import com.technicaltest.myyummyform.R
+import com.technicaltest.myyummyform.activity.MainActivityViewModel
+import com.technicaltest.myyummyform.composable.Question
 import com.technicaltest.myyummyform.composable.YummyButton
+import com.technicaltest.myyummyform.composable.YummyCheckBox
+import com.technicaltest.myyummyform.composable.YummyRadioButton
 import com.technicaltest.myyummyform.data.AnswersToSend
-import com.technicaltest.myyummyform.data.AnswersToSendItem
 import com.technicaltest.myyummyform.data.Choice
-import com.technicaltest.myyummyform.data.YummyForm
 import com.technicaltest.myyummyform.navigation.Success
-import com.technicaltest.myyummyform.utils.readJSONFromAssets
-import com.technicaltest.myyummyform.utils.writeJsonFile
 
 @Composable
-fun FormScreen(navController: NavHostController) {
-
-    val json = readJSONFromAssets(LocalContext.current)
-    val data = Gson().fromJson(json, YummyForm::class.java).sortedBy { it.order }
-    val context = LocalContext.current
-
-    val answersToSend = remember { mutableStateOf(AnswersToSend()) }
+fun FormScreen(navController: NavHostController, viewModel: MainActivityViewModel) {
 
     Column(
         modifier = Modifier
@@ -53,69 +37,43 @@ fun FormScreen(navController: NavHostController) {
         verticalArrangement = Arrangement.Center,
     ) {
 
+        val data = viewModel.readJson(LocalContext.current)
+
         data.forEach { item ->
 
-            var selectedRadioButtonAnswer by remember { mutableStateOf(item.choices.first()) }
+            val choices = item.choices.sortedBy { it.order }
+            var selectedRadioButtonAnswer by remember { mutableStateOf(choices.first()) }
             val selectedCheckboxesAnswers =
                 remember { mutableStateListOf<List<Choice>>(emptyList()) }
 
-            // Question
-            Text(
-                modifier = Modifier.padding(bottom = 2.dp),
-                text = item.question,
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp,
-                    textAlign = TextAlign.Center
-                )
-            )
+            Question(item)
 
-            // Choices
-            if (item.multiple) {
-                // Checkboxes
-                Column {
-                    item.choices.sortedBy { it.order }.forEach { response ->
+            Column {
+                choices.sortedBy { it.order }.forEach { response ->
+                    if (item.multiple) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Checkbox(
-                                checked = selectedCheckboxesAnswers.any { it.contains(response) },
-                                onCheckedChange = {
-                                    if (selectedCheckboxesAnswers.any { it.contains(response) }) {
-                                        selectedCheckboxesAnswers.remove(listOf(response))
-                                    } else {
-                                        selectedCheckboxesAnswers.add(listOf(response))
-                                    }
-                                    answersToSend.value.add(
-                                        AnswersToSendItem(
-                                            id = item.id,
-                                            choices = selectedCheckboxesAnswers.flatten()
-                                                .map { it.id }
-                                        )
-                                    )
+                            YummyCheckBox(
+                                selectedCheckboxesAnswers,
+                                response
+                            ) {
+                                if (selectedCheckboxesAnswers.any { it.contains(response) }) {
+                                    selectedCheckboxesAnswers.remove(listOf(response))
+                                } else {
+                                    selectedCheckboxesAnswers.add(listOf(response))
                                 }
-                            )
-                            Text(response.name)
+
+                                viewModel.saveCheckboxesResponses(item, selectedCheckboxesAnswers)
+                            }
                         }
-                    }
-                }
-            } else {
-                // Radio Buttons
-                Column {
-                    item.choices.sortedBy { it.order }.forEach { response ->
+                    } else {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            RadioButton(
-                                selected = selectedRadioButtonAnswer == response,
-                                onClick = {
-                                    selectedRadioButtonAnswer = response
-                                    answersToSend.value.add(
-                                        AnswersToSendItem(
-                                            id = item.id,
-                                            choices = listOf(
-                                                selectedRadioButtonAnswer.id
-                                            )
-                                        )
-                                    )
-                                })
-                            Text(response.name)
+                            YummyRadioButton(
+                                selectedRadioButtonAnswer,
+                                response
+                            ) {
+                                selectedRadioButtonAnswer = response
+                                viewModel.saveRadioButtonsResponses(item, selectedRadioButtonAnswer)
+                            }
                         }
                     }
                 }
@@ -124,8 +82,7 @@ fun FormScreen(navController: NavHostController) {
 
         // Send form
         YummyButton(text = R.string.form_button) {
-            val textToDisplay = writeJsonFile(answersToSend.value)
-            navController.navigate(Success(textToDisplay))
+            navController.navigate(Success(viewModel.getAnswersToSend()))
         }
     }
 }
