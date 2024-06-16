@@ -31,21 +31,21 @@ fun HomeScreen(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                modifier = Modifier.padding(bottom = 24.dp),
-                text = stringResource(id = R.string.home_subtitle),
-                style = TextStyle(
-                    fontStyle = FontStyle.Italic, fontSize = 24.sp, color = colorResource(
-                        id = R.color.purple_500
-                    )
-                )
-            )
             Image(
                 modifier = Modifier
                     .size(250.dp)
                     .padding(bottom = 16.dp),
                 painter = painterResource(id = R.drawable.cheese),
                 contentDescription = "Beautiful raclette"
+            )
+            Text(
+                modifier = Modifier.padding(top = 16.dp, bottom = 24.dp),
+                text = stringResource(id = R.string.home_subtitle),
+                style = TextStyle(
+                    fontStyle = FontStyle.Italic, fontSize = 24.sp, color = colorResource(
+                        id = R.color.purple_500
+                    )
+                )
             )
         }
         YummyButton(R.string.home_button) {
