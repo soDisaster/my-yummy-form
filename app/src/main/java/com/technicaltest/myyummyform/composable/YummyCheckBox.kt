@@ -6,6 +6,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import com.technicaltest.myyummyform.R
 import com.technicaltest.myyummyform.data.Choice
 
@@ -22,5 +25,16 @@ fun YummyCheckBox(
             onCheckedChange.invoke()
         }
     )
-    Text(response.name)
+    Text(
+        text = response.name,
+        style = TextStyle(
+            fontSize = 12.sp,
+            textAlign = TextAlign.Center,
+            color = if (selectedCheckboxesAnswers.any { it.contains(response) }) {
+                colorResource(id = R.color.purple_200)
+            } else {
+                colorResource(id = R.color.black)
+            }
+        )
+    )
 }
