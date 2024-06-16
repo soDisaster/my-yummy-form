@@ -26,7 +26,7 @@ fun YummyButton(text: Int, action: () -> Unit) {
         Text(
             modifier = Modifier.padding(horizontal = 64.dp),
             text = stringResource(id = text),
-            style = TextStyle(fontSize = 14.sp, color = colorResource(id = R.color.white))
+            style = TextStyle(fontSize = 16.sp, color = colorResource(id = R.color.white))
         )
     }
 }

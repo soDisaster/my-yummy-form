@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.technicaltest.myyummyform.composable.YummyTopAppBar
 import com.technicaltest.myyummyform.navigation.Form
 import com.technicaltest.myyummyform.navigation.Home
 import com.technicaltest.myyummyform.navigation.Success
@@ -24,20 +25,21 @@ import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel : MainActivityViewModel by inject()
+    private val viewModel: MainActivityViewModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             MyYummyFormTheme {
-                Scaffold { innerPadding ->
+                Scaffold(
+                    topBar = { YummyTopAppBar() }
+                ) { innerPadding ->
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(innerPadding)
                     ) {
-
                         val navController = rememberNavController()
                         NavHost(
                             navController = navController,
