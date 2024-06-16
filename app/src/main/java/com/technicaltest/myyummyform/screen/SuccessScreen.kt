@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -17,10 +18,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.technicaltest.myyummyform.R
 import com.technicaltest.myyummyform.composable.YummyButton
+import com.technicaltest.myyummyform.extension.sendEmail
 import com.technicaltest.myyummyform.navigation.Home
 
 @Composable
 fun SuccessScreen(navController: NavHostController, textFile: String) {
+
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -56,7 +60,7 @@ fun SuccessScreen(navController: NavHostController, textFile: String) {
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             YummyButton(R.string.success_send_by_email_button) {
-
+                context.sendEmail(textFile)
             }
 
             YummyButton(R.string.success_finish_button) {

@@ -21,7 +21,7 @@ class MainActivityViewModel : ViewModel() {
 
     fun readJson(context: Context): List<YummyFormItem> {
         val json = readJSONFromAssets(context)
-        val list =  Gson().fromJson(json, YummyForm::class.java).sortedBy { it.order }
+        val list = Gson().fromJson(json, YummyForm::class.java).sortedBy { it.order }
         numberOfQuestions = list.size
         return list
     }
@@ -45,14 +45,16 @@ class MainActivityViewModel : ViewModel() {
 
     fun getAnswersToSend(): String {
         answersToSend = AnswersToSend()
-        val listAnswersCheckboxes = checkboxesResponses.map { AnswersToSendItem(it.key, it.value) }.toMutableList()
-        val listAnswersRadioButton = radioButtonsResponses.map { AnswersToSendItem(it.key, it.value) }.toMutableList()
-        answersToSend.addAll(listAnswersCheckboxes)
+        val listAnswersCheckboxes =
+            checkboxesResponses.map { AnswersToSendItem(it.key, it.value) }.toMutableList()
+        val listAnswersRadioButton =
+            radioButtonsResponses.map { AnswersToSendItem(it.key, it.value) }.toMutableList()
         answersToSend.addAll(listAnswersRadioButton)
+        answersToSend.addAll(listAnswersCheckboxes)
         return writeJson(answersToSend)
     }
 
-    fun isFormComplete() =  answersToSend.size == numberOfQuestions
+    fun isFormComplete() = answersToSend.size == numberOfQuestions
 
     fun clearResponses() {
         checkboxesResponses.clear()
