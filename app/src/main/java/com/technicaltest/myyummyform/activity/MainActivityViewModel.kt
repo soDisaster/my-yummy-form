@@ -3,32 +3,25 @@ package com.technicaltest.myyummyform.activity
 import android.content.Context
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
-import com.google.gson.Gson
 import com.technicaltest.myyummyform.data.AnswersToSend
 import com.technicaltest.myyummyform.data.AnswersToSendItem
 import com.technicaltest.myyummyform.data.Choice
-import com.technicaltest.myyummyform.data.YummyForm
 import com.technicaltest.myyummyform.data.YummyFormItem
-import com.technicaltest.myyummyform.utils.readJSONFromAssets
+import com.technicaltest.myyummyform.repository.DataRepository
 import com.technicaltest.myyummyform.utils.writeJsonFile
+import org.koin.java.KoinJavaComponent.inject
 
 class MainActivityViewModel : ViewModel() {
+
+    private val dataRepository: DataRepository by inject(DataRepository::class.java)
 
     private var checkboxesResponses: LinkedHashMap<Int, List<Int>> = linkedMapOf()
     private var radioButtonsResponses: LinkedHashMap<Int, List<Int>> = linkedMapOf()
     private var answersToSend = AnswersToSend()
-    private var numberOfQuestions = 0
 
-    fun readJson(context: Context): List<YummyFormItem> {
-        val json = readJSONFromAssets(context)
-        val list = Gson().fromJson(json, YummyForm::class.java).sortedBy { it.order }
-        numberOfQuestions = list.size
-        return list
-    }
+    fun getData(context: Context): List<YummyFormItem> = dataRepository.getDataFromJson(context)
 
-    private fun writeJson(answersToSend: AnswersToSend): String {
-        return writeJsonFile(answersToSend)
-    }
+    private fun writeJson(answersToSend: AnswersToSend) = writeJsonFile(answersToSend)
 
     fun saveCheckboxesResponses(
         item: YummyFormItem,
@@ -54,7 +47,9 @@ class MainActivityViewModel : ViewModel() {
         return writeJson(answersToSend)
     }
 
-    fun isFormComplete() = answersToSend.size == numberOfQuestions
+    fun isFormComplete(numberOfQuestions: Int) =
+        answersToSend.size == numberOfQuestions
+                && !answersToSend.any { it.choices.isEmpty() }
 
     fun clearResponses() {
         checkboxesResponses.clear()

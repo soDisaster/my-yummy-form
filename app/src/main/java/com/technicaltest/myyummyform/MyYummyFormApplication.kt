@@ -3,6 +3,7 @@ package com.technicaltest.myyummyform
 import android.app.Application
 import com.technicaltest.myyummyform.activity.MainActivity
 import com.technicaltest.myyummyform.activity.MainActivityViewModel
+import com.technicaltest.myyummyform.repository.DataRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidFileProperties
 import org.koin.android.ext.koin.androidLogger
@@ -21,6 +22,7 @@ class MyYummyFormApplication : Application() {
             modules(
                 module {
                     factory { MainActivityViewModel() }
+                    factory { DataRepository() }
                 }
             )
         }

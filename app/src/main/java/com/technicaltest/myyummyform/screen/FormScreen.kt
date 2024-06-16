@@ -39,6 +39,7 @@ fun FormScreen(
 ) {
 
     val coroutineScope = rememberCoroutineScope()
+    var numberOfQuestions = -1
 
     Column(
         modifier = Modifier
@@ -47,7 +48,8 @@ fun FormScreen(
             .verticalScroll(rememberScrollState()),
     ) {
 
-        val data = viewModel.readJson(LocalContext.current)
+        val data = viewModel.getData(LocalContext.current)
+        numberOfQuestions = data.size
 
         data.forEachIndexed { index, item ->
 
@@ -99,7 +101,7 @@ fun FormScreen(
 
         YummyButton(text = R.string.form_button) {
             val answersToSend = viewModel.getAnswersToSend()
-            if (viewModel.isFormComplete()) {
+            if (viewModel.isFormComplete(numberOfQuestions)) {
                 viewModel.clearResponses()
                 navController.navigate(Success(answersToSend))
             } else {
