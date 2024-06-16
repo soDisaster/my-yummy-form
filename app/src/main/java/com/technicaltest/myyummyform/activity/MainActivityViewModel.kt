@@ -14,8 +14,8 @@ import com.technicaltest.myyummyform.utils.writeJsonFile
 
 class MainActivityViewModel : ViewModel() {
 
-    private var checkboxesResponses: MutableMap<Int, List<Int>> = mutableMapOf()
-    private var radioButtonsResponses: MutableMap<Int, List<Int>> = mutableMapOf()
+    private var checkboxesResponses: LinkedHashMap<Int, List<Int>> = linkedMapOf()
+    private var radioButtonsResponses: LinkedHashMap<Int, List<Int>> = linkedMapOf()
 
     fun readJson(context: Context): List<YummyFormItem> {
         val json = readJSONFromAssets(context)

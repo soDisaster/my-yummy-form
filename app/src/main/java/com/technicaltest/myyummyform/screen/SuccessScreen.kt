@@ -38,7 +38,9 @@ fun SuccessScreen(navController: NavHostController, textFile: String) {
         )
 
         Text(
-            text = textFile
+            modifier = Modifier.padding(horizontal = 24.dp),
+            text = textFile,
+            style = TextStyle(textAlign = TextAlign.Start)
         )
 
         Text(
