@@ -19,7 +19,7 @@ fun YummyCheckBox(
     onCheckedChange: () -> Unit
 ) {
     Checkbox(
-        colors = CheckboxDefaults.colors(checkedColor = colorResource(id = R.color.purple_200)),
+        colors = CheckboxDefaults.colors(checkedColor = colorResource(id = R.color.purple_500)),
         checked = selectedCheckboxesAnswers.any { it.contains(response) },
         onCheckedChange = {
             onCheckedChange.invoke()
@@ -31,7 +31,7 @@ fun YummyCheckBox(
             fontSize = 12.sp,
             textAlign = TextAlign.Center,
             color = if (selectedCheckboxesAnswers.any { it.contains(response) }) {
-                colorResource(id = R.color.purple_200)
+                colorResource(id = R.color.purple_500)
             } else {
                 colorResource(id = R.color.black)
             }

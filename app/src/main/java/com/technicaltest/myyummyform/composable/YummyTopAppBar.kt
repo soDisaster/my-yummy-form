@@ -36,7 +36,7 @@ fun YummyTopAppBar() {
             )
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = colorResource(id = R.color.purple_200),
+            containerColor = colorResource(id = R.color.purple_500),
             titleContentColor = colorResource(id = R.color.white)
         )
     )

@@ -22,14 +22,14 @@ fun YummyRadioButton(
         onClick = {
             onClick.invoke()
         },
-        colors = RadioButtonDefaults.colors(selectedColor = colorResource(id = R.color.purple_200))
+        colors = RadioButtonDefaults.colors(selectedColor = colorResource(id = R.color.purple_500))
     )
     Text(
         text = response.name, style = TextStyle(
             fontSize = 12.sp,
             textAlign = TextAlign.Center,
             color = if (selectedRadioButtonAnswer == response) {
-                colorResource(id = R.color.purple_200)
+                colorResource(id = R.color.purple_500)
             } else {
                 colorResource(id = R.color.black)
             }

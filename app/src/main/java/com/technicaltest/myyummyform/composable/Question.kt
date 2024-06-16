@@ -22,7 +22,7 @@ fun Question(index: Int, item: YummyFormItem) {
         modifier = Modifier.padding(bottom = 8.dp, end = 16.dp),
         text = "$questionNumber. ${item.question}",
         style = TextStyle(
-            color = colorResource(id = R.color.purple_200),
+            color = colorResource(id = R.color.purple_500),
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
             textAlign = TextAlign.Start
