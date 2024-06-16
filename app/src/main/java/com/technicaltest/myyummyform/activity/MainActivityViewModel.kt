@@ -16,10 +16,14 @@ class MainActivityViewModel : ViewModel() {
 
     private var checkboxesResponses: LinkedHashMap<Int, List<Int>> = linkedMapOf()
     private var radioButtonsResponses: LinkedHashMap<Int, List<Int>> = linkedMapOf()
+    private var answersToSend = AnswersToSend()
+    private var numberOfQuestions = 0
 
     fun readJson(context: Context): List<YummyFormItem> {
         val json = readJSONFromAssets(context)
-        return Gson().fromJson(json, YummyForm::class.java).sortedBy { it.order }
+        val list =  Gson().fromJson(json, YummyForm::class.java).sortedBy { it.order }
+        numberOfQuestions = list.size
+        return list
     }
 
     private fun writeJson(answersToSend: AnswersToSend): String {
@@ -33,16 +37,27 @@ class MainActivityViewModel : ViewModel() {
         checkboxesResponses[item.id] = selectedCheckboxesAnswers.flatten().map { it.id }
     }
 
-    fun saveRadioButtonsResponses(item: YummyFormItem, selectedRadioButtonAnswer: Choice) {
-        radioButtonsResponses[item.id] = listOf(selectedRadioButtonAnswer.id)
+    fun saveRadioButtonsResponses(item: YummyFormItem, selectedRadioButtonAnswer: Choice?) {
+        selectedRadioButtonAnswer?.let {
+            radioButtonsResponses[item.id] = listOf(selectedRadioButtonAnswer.id)
+        }
     }
 
     fun getAnswersToSend(): String {
-        val answersToSend = AnswersToSend()
+        answersToSend = AnswersToSend()
         val listAnswersCheckboxes = checkboxesResponses.map { AnswersToSendItem(it.key, it.value) }.toMutableList()
         val listAnswersRadioButton = radioButtonsResponses.map { AnswersToSendItem(it.key, it.value) }.toMutableList()
         answersToSend.addAll(listAnswersCheckboxes)
         answersToSend.addAll(listAnswersRadioButton)
         return writeJson(answersToSend)
     }
+
+    fun isFormComplete() =  answersToSend.size == numberOfQuestions
+
+    fun clearResponses() {
+        checkboxesResponses.clear()
+        radioButtonsResponses.clear()
+        answersToSend.clear()
+    }
+
 }

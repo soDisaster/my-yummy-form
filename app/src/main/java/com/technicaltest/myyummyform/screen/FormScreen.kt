@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,9 +29,16 @@ import com.technicaltest.myyummyform.composable.YummyCheckBox
 import com.technicaltest.myyummyform.composable.YummyRadioButton
 import com.technicaltest.myyummyform.data.Choice
 import com.technicaltest.myyummyform.navigation.Success
+import kotlinx.coroutines.launch
 
 @Composable
-fun FormScreen(navController: NavHostController, viewModel: MainActivityViewModel) {
+fun FormScreen(
+    navController: NavHostController,
+    viewModel: MainActivityViewModel,
+    snackBarHostState: SnackbarHostState
+) {
+
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -42,7 +52,7 @@ fun FormScreen(navController: NavHostController, viewModel: MainActivityViewMode
         data.forEachIndexed { index, item ->
 
             val choices = item.choices.sortedBy { it.order }
-            var selectedRadioButtonAnswer by remember { mutableStateOf(choices.first()) }
+            var selectedRadioButtonAnswer by remember { mutableStateOf<Choice?>(null) }
             val selectedCheckboxesAnswers =
                 remember { mutableStateListOf<List<Choice>>(emptyList()) }
 
@@ -88,7 +98,19 @@ fun FormScreen(navController: NavHostController, viewModel: MainActivityViewMode
         }
 
         YummyButton(text = R.string.form_button) {
-            navController.navigate(Success(viewModel.getAnswersToSend()))
+            val answersToSend = viewModel.getAnswersToSend()
+            if (viewModel.isFormComplete()) {
+                viewModel.clearResponses()
+                navController.navigate(Success(answersToSend))
+            } else {
+                coroutineScope.launch {
+                    snackBarHostState.showSnackbar(
+                        "Please fill all answers",
+                        duration = SnackbarDuration.Short,
+                        withDismissAction = true
+                    )
+                }
+            }
         }
     }
 }

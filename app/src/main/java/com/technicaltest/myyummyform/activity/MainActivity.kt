@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,9 +34,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+
+            val scaffoldState = remember { SnackbarHostState() }
+
             MyYummyFormTheme {
                 Scaffold(
-                    topBar = { YummyTopAppBar() }
+                    topBar = { YummyTopAppBar() },
+                    snackbarHost = {
+                        SnackbarHost(scaffoldState)
+                    }
                 ) { innerPadding ->
                     Column(
                         modifier = Modifier
@@ -49,7 +58,7 @@ class MainActivity : ComponentActivity() {
                                 HomeScreen(navController)
                             }
                             composable<Form> {
-                                FormScreen(navController, viewModel)
+                                FormScreen(navController, viewModel, scaffoldState)
                             }
                             composable<Success> {
                                 val details =
