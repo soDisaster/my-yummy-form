@@ -4,4 +4,8 @@
     <string name="home_subtitle">Welcome in a wonderful world!</string>
     <string name="home_button">Let\'s go!</string>
     <string name="form_button">Send form!</string>
+    <string name="success_congrats_title">Congratulations your file was successfully created!</string>
+    <string name="success_info_text">You can find a file with your answers in your Documents</string>
+    <string name="success_send_by_email_button">Send by email</string>
+    <string name="success_finish_button">Finish</string>
 </resources>
