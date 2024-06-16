@@ -1,5 +1,6 @@
 package com.technicaltest.myyummyform.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +26,10 @@ import com.technicaltest.myyummyform.navigation.Home
 fun SuccessScreen(navController: NavHostController, textFile: String) {
 
     val context = LocalContext.current
+
+    BackHandler {
+        navController.navigate(Home)
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
