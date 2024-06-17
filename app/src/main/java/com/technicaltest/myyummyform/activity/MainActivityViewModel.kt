@@ -3,6 +3,7 @@ package com.technicaltest.myyummyform.activity
 import android.content.Context
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
+import com.google.gson.Gson
 import com.technicaltest.myyummyform.data.AnswersToSend
 import com.technicaltest.myyummyform.data.AnswersToSendItem
 import com.technicaltest.myyummyform.data.Choice
@@ -44,7 +45,9 @@ class MainActivityViewModel : ViewModel() {
             radioButtonsResponses.map { AnswersToSendItem(it.key, it.value) }.toMutableList()
         answersToSend.addAll(listAnswersRadioButton)
         answersToSend.addAll(listAnswersCheckboxes)
-        return writeJson(answersToSend)
+        // Write external storage is restricted
+        // return writeJson(answersToSend)
+        return Gson().toJson(answersToSend).toString()
     }
 
     fun isFormComplete(numberOfQuestions: Int) =
